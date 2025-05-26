@@ -1,0 +1,6 @@
+fastapi==0.115.12
+pandas==2.2.3
+passlib==1.7.4
+pydantic==2.11.5
+python_jose==3.4.0
+SQLAlchemy==2.0.23
