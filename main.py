@@ -80,17 +80,34 @@ def get_db():
         db.close()
 
 # ---------- Signup/Login Routes ----------
-@app.post("/signup")
 def signup(data: SignupData, db: Session = Depends(get_db)):
+    # Check if the username exists
+    existing_user = db.query(User).filter(User.username == data.username).first()
+
+    if existing_user:
+        # If username exists and password + MAC address match => already registered
+        if verify_password(data.password, existing_user.hashed_password) and existing_user.mac_address == data.mac_address:
+            raise HTTPException(status_code=400, detail="User already registered")
+        # If username exists but MAC address is different
+        elif existing_user.mac_address != data.mac_address:
+            raise HTTPException(status_code=403, detail="User already registered on another device. Please log in using the registered device.")
+        # If username exists but password doesn't match
+        else:
+            raise HTTPException(status_code=400, detail="Username already taken with different credentials")
+
+    # Check if MAC address is already used by a different user
     mac_id = db.query(User).filter(User.mac_address == data.mac_address).first()
     if mac_id:
-        raise HTTPException(status_code=400, detail="Device already registered with other User")
+        raise HTTPException(status_code=400, detail="Device already registered with another user")
+
+    # Register new user
     hashed_pwd = hash_password(data.password)
     new_user = User(username=data.username, hashed_password=hashed_pwd, mac_address=data.mac_address)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return {"message": "User registered successfully"}
+
 
 @app.post("/login")
 def login(data: LoginData, db: Session = Depends(get_db)):
