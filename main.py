@@ -28,7 +28,7 @@ app = FastAPI(
 
 @app.get("/", include_in_schema=False)
 def root():
-    return JSONResponse(content={"message": "FastAPI is running"})
+    return JSONResponse(content={"message": "Welcome to Users Portal API"})
     
 app.add_middleware(
     CORSMiddleware,
