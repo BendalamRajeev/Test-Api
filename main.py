@@ -134,12 +134,15 @@ async def upload_user_data(files: list[UploadFile] = File(...)):
 
     for file in files:
         try:
-            if file.filename.endswith(".json"):
-                content = await file.read()
+            content = await file.read()
+            if file.filename.endswith(".json"):             
                 df = pd.DataFrame(json.loads(content))
-            elif file.filename.endswith((".xls", ".xlsx")):
-                content = await file.read()
+            elif file.filename.endswith((".xls", ".xlsx")):               
                 df = pd.read_excel(io.BytesIO(content))
+            elif file.filename.endswith(".csv"):            
+                df = pd.read_csv(io.BytesIO(content))
+            elif file.filename.endswith(".tsv"):
+                df = pd.read_csv(io.BytesIO(content), sep="\t")
             else:
                 continue
 
