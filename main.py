@@ -80,6 +80,7 @@ def get_db():
         db.close()
 
 # ---------- Signup/Login Routes ----------
+@app.post("/signup")
 def signup(data: SignupData, db: Session = Depends(get_db)):
     # Check if the username exists
     existing_user = db.query(User).filter(User.username == data.username).first()
