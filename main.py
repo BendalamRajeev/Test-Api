@@ -22,7 +22,9 @@ ALGORITHM = "HS256"
 
 
 # ---------- App & DB ----------
-app = FastAPI()
+app = FastAPI(
+    title="Users Portal API"
+)
 
 @app.get("/", include_in_schema=False)
 def root():
