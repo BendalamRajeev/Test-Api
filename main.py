@@ -90,7 +90,7 @@ def signup(data: SignupData, db: Session = Depends(get_db)):
             raise HTTPException(status_code=400, detail="User already registered")
         # If username exists but MAC address is different
         elif existing_user.mac_address != data.mac_address:
-            raise HTTPException(status_code=403, detail="User already registered on another device. Please log in using the registered device.")
+            raise HTTPException(status_code=400, detail="User already registered on another device. Please log in using the registered device.")
         # If username exists but password doesn't match
         else:
             raise HTTPException(status_code=400, detail="Username already taken with different credentials")
