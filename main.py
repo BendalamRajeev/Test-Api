@@ -23,6 +23,11 @@ ALGORITHM = "HS256"
 
 # ---------- App & DB ----------
 app = FastAPI()
+
+@app.get("/", include_in_schema=False)
+def root():
+    return JSONResponse(content={"message": "FastAPI is running"})
+    
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Update with specific frontend origin in production
