@@ -98,7 +98,7 @@ def login(data: LoginData, db: Session = Depends(get_db)):
     if not user or not verify_password(data.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     if user.mac_address != data.mac_address:
-        raise HTTPException(status_code=403, detail="MAC address mismatch")
+        raise HTTPException(status_code=403, detail="User is already registered on another device. Please log in using the registered device.")
     access_token = create_access_token(data={"sub": user.username}, expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     return {"access_token": access_token, "token_type": "bearer"}
 
